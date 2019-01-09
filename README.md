@@ -6,4 +6,4 @@ The game is currently barely functional.
 
 ## Screenshots
 
-![screenshot 1](https://imgur.com/Hbrpokh)
+![screenshot 1](https://imgur.com/Hbrpokh.png)
