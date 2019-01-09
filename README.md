@@ -1,4 +1,4 @@
-# Jumper!
+# Jumper! ![](https://tokei.rs/b1/github/tverghis/jumper)
 
 Jumper! is a simple game written in [Rust](https://www.rust-lang.org/), using the [ggez](https://github.com/ggez/ggez) framework.
 
