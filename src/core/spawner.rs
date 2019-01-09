@@ -2,7 +2,6 @@ use crate::constants::{IMG_OGRE, LEVEL_FLOOR};
 use crate::core::asset_store::AssetStore;
 use crate::core::collider;
 use ggez::graphics::{self, Point2, Vector2};
-use ggez::nalgebra as na;
 use std::collections::VecDeque;
 use std::time::{Duration, Instant};
 
@@ -10,18 +9,25 @@ pub struct Spawner<'a> {
     pub unit: &'a graphics::Image,
     pub entities: VecDeque<Enemy>,
     pub last_spawn_time: Option<Instant>,
-    pub frequency: Duration,
     pub position: Point2,
+
+    frequency: Duration,
 }
 
 impl<'a> Spawner<'a> {
     pub fn new(assets: &'a AssetStore) -> Spawner<'a> {
+        let unit = assets.get_image(IMG_OGRE).unwrap();
+        let entities = VecDeque::new();
+        let last_spawn_time = Some(Instant::now());
+        let position = Point2::new(900.0, LEVEL_FLOOR);
+        let frequency = Duration::from_millis(1000);
+
         Spawner {
-            unit: assets.get_image(IMG_OGRE).unwrap(),
-            entities: VecDeque::new(),
-            last_spawn_time: Some(Instant::now()),
-            frequency: Duration::from_millis(1000),
-            position: na::Point2::new(900.0, LEVEL_FLOOR),
+            unit,
+            entities,
+            last_spawn_time,
+            position,
+            frequency,
         }
     }
 
@@ -74,7 +80,7 @@ impl Enemy {
 
 impl collider::SphereCollider for Enemy {
     fn radius(&self) -> f32 {
-        18.0
+        16.0
     }
 
     fn center(&self) -> &Point2 {

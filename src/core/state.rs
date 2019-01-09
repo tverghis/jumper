@@ -4,8 +4,7 @@ use crate::core::collider::SphereCollider;
 use crate::core::player::Player;
 use crate::core::spawner::Spawner;
 use ggez::event::{self, Keycode, Mod};
-use ggez::graphics::{self, Font, Vector2};
-use ggez::nalgebra as na;
+use ggez::graphics::{self, Font, Point2, Vector2};
 use ggez::{timer, Context, GameResult};
 
 const TARGET_FPS: u32 = 60;
@@ -26,12 +25,18 @@ enum GameState {
 
 impl<'a> MainState<'a> {
     pub fn new(assets: &'a AssetStore) -> MainState<'a> {
+        let player = Player::new(assets);
+        let velocity = Vector2::new(0.0, 0.0);
+        let enemy_spawner = Spawner::new(assets);
+        let game_state = GameState::Playing;
+        let score = 0;
+
         MainState {
-            player: Player::new(assets),
-            velocity: Vector2::new(0.0, 0.0),
-            enemy_spawner: Spawner::new(assets),
-            game_state: GameState::Playing,
-            score: 0,
+            player,
+            velocity,
+            enemy_spawner,
+            game_state,
+            score,
             assets,
         }
     }
@@ -117,7 +122,7 @@ fn draw_game_state(context: &mut Context, state: &MainState, font: &Font) -> Gam
     draw_score(context, state.score, font)?;
 
     let player = &state.player;
-    let position = na::Point2::new(player.position.x, player.position.y);
+    let position = Point2::new(player.position.x, player.position.y);
     graphics::draw(context, player.unit, position, 0.0)?;
 
     for enemy in state.enemy_spawner.entities.iter() {
