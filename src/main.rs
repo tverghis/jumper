@@ -54,7 +54,7 @@ fn load_assets(context: &mut Context) -> GameResult<AssetStore> {
 }
 
 fn load_fonts(context: &mut Context, store: &mut AssetStore) -> GameResult<()> {
-    let default_font = graphics::Font::new(context, "/ShareTechMono.ttf", 24)?;
+    let default_font = graphics::Font::new(context, "/fonts/ShareTechMono.ttf", 24)?;
 
     store.store_font(FONT_DEFAULT, default_font);
 
