@@ -6,6 +6,7 @@ use crate::core::spawner::Spawner;
 use ggez::event::{self, Keycode, Mod};
 use ggez::graphics::{self, Font, Point2, Vector2};
 use ggez::{timer, Context, GameResult};
+use crate::core::tick::Tick;
 
 const TARGET_FPS: u32 = 60;
 
@@ -52,13 +53,7 @@ impl<'a> event::EventHandler for MainState<'a> {
             self.velocity.y += GRAVITY;
             self.player.update_position(self.velocity);
 
-            if self.enemy_spawner.should_spawn() {
-                self.enemy_spawner.spawn();
-            }
-
-            for enemy in self.enemy_spawner.entities.iter_mut() {
-                enemy.slide();
-            }
+            self.enemy_spawner.update();
 
             if self
                 .enemy_spawner
@@ -68,10 +63,6 @@ impl<'a> event::EventHandler for MainState<'a> {
             {
                 self.game_state = GameState::GameOver;
                 return Ok(());
-            }
-
-            if self.enemy_spawner.remove_offscreen() {
-                self.score += 1;
             }
         }
 

@@ -1,6 +1,7 @@
 use crate::constants::{IMG_OGRE, LEVEL_FLOOR};
 use crate::core::asset_store::AssetStore;
 use crate::core::collider;
+use crate::core::tick::Tick;
 use ggez::graphics::{self, Vector2};
 use std::collections::VecDeque;
 use std::time::{Duration, Instant};
@@ -57,6 +58,24 @@ impl<'a> Spawner<'a> {
         }
 
         false
+    }
+}
+
+impl<'a> Tick for Spawner<'a> {
+    fn update(&mut self) {
+        if self.should_spawn() {
+            self.spawn();
+        }
+
+        slide_enemies(&mut self.entities);
+
+        self.remove_offscreen();
+    }
+}
+
+fn slide_enemies(enemies: &mut VecDeque<Entity>) {
+    for enemy in enemies {
+        enemy.slide();
     }
 }
 
