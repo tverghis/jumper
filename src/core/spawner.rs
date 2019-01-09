@@ -1,8 +1,8 @@
 use crate::constants::{IMG_OGRE, LEVEL_FLOOR};
 use crate::core::asset_store::AssetStore;
-use crate::core::collider;
+use crate::core::entity::Entity;
 use crate::core::tick::Tick;
-use ggez::graphics::{self, Vector2};
+use ggez::graphics;
 use std::collections::VecDeque;
 use std::time::{Duration, Instant};
 
@@ -76,42 +76,5 @@ impl<'a> Tick for Spawner<'a> {
 fn slide_enemies(enemies: &mut VecDeque<Entity>) {
     for enemy in enemies {
         enemy.slide();
-    }
-}
-
-pub struct Entity {
-    pub unit: graphics::Image,
-    pub position: graphics::Point2,
-
-    radius: u32,
-}
-
-impl Entity {
-    pub fn new(unit: graphics::Image, position: graphics::Point2) -> Entity {
-        let radius = unit.width();
-
-        Entity {
-            unit,
-            position,
-            radius,
-        }
-    }
-
-    pub fn slide(&mut self) {
-        self.position += Vector2::new(-5.0, 0.0);
-    }
-
-    pub fn is_offscreen(&self) -> bool {
-        self.position.coords.x <= 0.0
-    }
-}
-
-impl collider::SphereCollider for Entity {
-    fn radius(&self) -> u32 {
-        self.radius
-    }
-
-    fn center(&self) -> &graphics::Point2 {
-        &self.position
     }
 }
