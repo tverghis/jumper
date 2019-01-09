@@ -1,15 +1,15 @@
 use crate::constants::{IMG_OGRE, LEVEL_FLOOR};
 use crate::core::asset_store::AssetStore;
 use crate::core::collider;
-use ggez::graphics::{self, Point2, Vector2};
+use ggez::graphics::{self, Vector2};
 use std::collections::VecDeque;
 use std::time::{Duration, Instant};
 
 pub struct Spawner<'a> {
     pub unit: &'a graphics::Image,
-    pub entities: VecDeque<Enemy>,
+    pub entities: VecDeque<Entity>,
     pub last_spawn_time: Option<Instant>,
-    pub position: Point2,
+    pub position: graphics::Point2,
 
     frequency: Duration,
 }
@@ -19,7 +19,7 @@ impl<'a> Spawner<'a> {
         let unit = assets.get_image(IMG_OGRE).unwrap();
         let entities = VecDeque::new();
         let last_spawn_time = Some(Instant::now());
-        let position = Point2::new(900.0, LEVEL_FLOOR);
+        let position = graphics::Point2::new(900.0, LEVEL_FLOOR);
         let frequency = Duration::from_millis(1000);
 
         Spawner {
@@ -32,10 +32,7 @@ impl<'a> Spawner<'a> {
     }
 
     pub fn spawn(&mut self) {
-        let enemy = Enemy {
-            unit: self.unit.clone(),
-            position: self.position,
-        };
+        let enemy = Entity::new(self.unit.clone(), self.position);
 
         self.entities.push_back(enemy);
 
@@ -63,12 +60,24 @@ impl<'a> Spawner<'a> {
     }
 }
 
-pub struct Enemy {
+pub struct Entity {
     pub unit: graphics::Image,
     pub position: graphics::Point2,
+
+    radius: u32,
 }
 
-impl Enemy {
+impl Entity {
+    pub fn new(unit: graphics::Image, position: graphics::Point2) -> Entity {
+        let radius = unit.width();
+
+        Entity {
+            unit,
+            position,
+            radius,
+        }
+    }
+
     pub fn slide(&mut self) {
         self.position += Vector2::new(-5.0, 0.0);
     }
@@ -78,12 +87,12 @@ impl Enemy {
     }
 }
 
-impl collider::SphereCollider for Enemy {
-    fn radius(&self) -> f32 {
-        16.0
+impl collider::SphereCollider for Entity {
+    fn radius(&self) -> u32 {
+        self.radius
     }
 
-    fn center(&self) -> &Point2 {
+    fn center(&self) -> &graphics::Point2 {
         &self.position
     }
 }

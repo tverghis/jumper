@@ -61,8 +61,8 @@ impl<'a> Player<'a> {
 }
 
 impl<'a> collider::SphereCollider for Player<'a> {
-    fn radius(&self) -> f32 {
-        16.0
+    fn radius(&self) -> u32 {
+        16
     }
 
     fn center(&self) -> &Point2 {
