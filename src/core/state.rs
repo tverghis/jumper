@@ -1,18 +1,17 @@
-use crate::constants::{FONT_DEFAULT, GRAVITY, MAX_JUMPS};
+use crate::constants::FONT_DEFAULT;
 use crate::core::asset_store::AssetStore;
 use crate::core::collider::SphereCollider;
 use crate::core::player::Player;
 use crate::core::spawner::Spawner;
-use ggez::event::{self, Keycode, Mod};
-use ggez::graphics::{self, Font, Point2, Vector2};
-use ggez::{timer, Context, GameResult};
 use crate::core::tick::Tick;
+use ggez::event::{self, Keycode, Mod};
+use ggez::graphics::{self, Font, Point2};
+use ggez::{timer, Context, GameResult};
 
 const TARGET_FPS: u32 = 60;
 
 pub struct MainState<'a> {
     player: Player<'a>,
-    velocity: Vector2,
     enemy_spawner: Spawner<'a>,
     game_state: GameState,
     score: usize,
@@ -27,14 +26,12 @@ enum GameState {
 impl<'a> MainState<'a> {
     pub fn new(assets: &'a AssetStore) -> MainState<'a> {
         let player = Player::new(assets);
-        let velocity = Vector2::new(0.0, 0.0);
         let enemy_spawner = Spawner::new(assets);
         let game_state = GameState::Playing;
         let score = 0;
 
         MainState {
             player,
-            velocity,
             enemy_spawner,
             game_state,
             score,
@@ -50,9 +47,7 @@ impl<'a> event::EventHandler for MainState<'a> {
         }
 
         while timer::check_update_time(context, TARGET_FPS) {
-            self.velocity.y += GRAVITY;
-            self.player.update_position(self.velocity);
-
+            self.player.update();
             self.enemy_spawner.update();
 
             if self
@@ -98,10 +93,7 @@ impl<'a> event::EventHandler for MainState<'a> {
 
         match keycode {
             Keycode::Space => {
-                if self.player.jumps < MAX_JUMPS {
-                    self.velocity = Vector2::new(0.0, -50.0);
-                    self.player.jumps += 1;
-                }
+                self.player.jump();
             }
             Keycode::Escape => context.quit().unwrap(),
             _ => (),
