@@ -106,7 +106,7 @@ fn draw_game_state(context: &mut Context, state: &MainState, font: &Font) -> Gam
 
     let player = &state.player;
     let position = Point2::new(player.position.x, player.position.y);
-    graphics::draw(context, player.unit, position, 0.0)?;
+    graphics::draw(context, player.unit(), position, 0.0)?;
 
     for enemy in state.enemy_spawner.entities.iter() {
         graphics::draw(context, &enemy.unit, enemy.position, 0.0)?;

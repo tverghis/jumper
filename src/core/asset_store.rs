@@ -5,6 +5,7 @@ use std::collections::HashMap;
 pub struct AssetStore {
     fonts: HashMap<&'static str, Font>,
     images: HashMap<&'static str, Image>,
+    anim_images: HashMap<&'static str, Vec<Image>>,
 }
 
 impl AssetStore {
@@ -28,5 +29,13 @@ impl AssetStore {
 
     pub fn get_image(&self, descriptor: &'static str) -> Option<&Image> {
         self.images.get(descriptor)
+    }
+
+    pub fn store_anim_images(&mut self, descriptor: &'static str, images: Vec<Image>) {
+        self.anim_images.insert(descriptor, images);
+    }
+
+    pub fn get_anim_images(&self, descriptor: &'static str) -> Option<&Vec<Image>> {
+        self.anim_images.get(descriptor)
     }
 }

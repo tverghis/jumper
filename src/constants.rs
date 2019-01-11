@@ -7,6 +7,8 @@ pub const LEVEL_FLOOR: f32 = 400.0;
 pub const MAX_JUMPS: u8 = 2;
 
 pub const FONT_DEFAULT: &str = "default";
-pub const IMG_PLAYER_RUN: &str = "player_run";
-pub const IMG_PLAYER_JUMP: &str = "player_jump";
 pub const IMG_OGRE: &str = "ogre";
+
+pub const IMG_PLAYER_RUN: &str = "player_run";
+
+pub const IMG_PLAYER_JUMP: &str = "player_jump";

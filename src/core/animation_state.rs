@@ -1,21 +1,37 @@
-use ggez::graphics;
+use ggez::graphics::Image;
 
-pub struct AnimationState {
-    sprites: Vec<graphics::Image>,
+pub struct AnimationState<'a> {
+    sprites: &'a Vec<Image>,
+    current_index: usize,
+    request_frame: usize,
 }
 
-impl AnimationState {
-    pub fn new() -> AnimationState {
-        let sprites = Vec::new();
+impl<'a> AnimationState<'a> {
+    pub fn with_sprites(sprites: &'a Vec<Image>) -> AnimationState {
+        let current_index = 0;
+        let request_frame = 0;
 
-        AnimationState { sprites }
+        AnimationState {
+            sprites,
+            current_index,
+            request_frame,
+        }
     }
 
-    pub fn add_sprite(&mut self, sprite: graphics::Image) {
-        self.sprites.push(sprite);
+    pub fn frame(&self) -> &Image {
+        &self.sprites[self.current_index]
     }
 
-    pub fn iter(&self) -> std::iter::Cycle<std::slice::Iter<graphics::Image>> {
-        self.sprites.iter().cycle()
+    pub fn advance(&mut self) {
+        self.request_frame += 1;
+
+        if self.request_frame == 5 {
+            self.current_index += 1;
+
+            if self.current_index == self.sprites.len() {
+                self.current_index = 0;
+            }
+            self.request_frame = 0;
+        }
     }
 }
