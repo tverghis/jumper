@@ -1,9 +1,11 @@
 use ggez::graphics::Image;
 
+const REQUEST_FRAME_THRESHOLD: u8 = 5;
+
 pub struct AnimationState<'a> {
     sprites: &'a Vec<Image>,
     current_index: usize,
-    request_frame: usize,
+    request_frame: u8,
 }
 
 impl<'a> AnimationState<'a> {
@@ -25,7 +27,7 @@ impl<'a> AnimationState<'a> {
     pub fn advance(&mut self) {
         self.request_frame += 1;
 
-        if self.request_frame == 5 {
+        if self.request_frame == REQUEST_FRAME_THRESHOLD {
             self.current_index += 1;
 
             if self.current_index == self.sprites.len() {
